@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var button: Button
     lateinit var testRef: DatabaseReference
+    lateinit var valueEventListener: ValueEventListener
     lateinit var testValueEventListener: TestValueEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,8 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        testRef = FirebaseDatabase.getInstance().reference.child("testc")
-        testValueEventListener = TestValueEventListener(this)
+        testRef = FirebaseDatabase.getInstance().reference.child("testcdd")
     }
 
     class TestValueEventListener(val activity: Activity) : ValueEventListener {
@@ -45,8 +45,7 @@ class MainActivity : AppCompatActivity() {
             println("startActivity!")
             startActivity(intent)
 
-            testRef.addValueEventListener(testValueEventListener)
-//            testRef.addListenerForSingleValueEvent(testValueEventListener)
+            valueEventListener = testRef.addSingleValueEventListener(TestValueEventListener(this))
         }
     }
 
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         println("MainActivity onStop")
         super.onStop()
 
-        testRef.removeEventListener(testValueEventListener)
+        testRef.removeEventListener(valueEventListener)
     }
 
     override fun onDestroy() {
